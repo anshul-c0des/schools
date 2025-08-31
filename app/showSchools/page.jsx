@@ -4,6 +4,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { BarLoader } from "react-spinners";
+import { MdDeleteForever } from "react-icons/md";
+import { FaPlus } from "react-icons/fa";
 
 const PAGE_SIZE = 10;
 
@@ -86,6 +88,33 @@ export default function ShowSchools() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loadingMore, hasMore, loading]);
 
+
+  const handleDelete = (schoolId) => {
+    // Show confirmation prompt to the user
+    if (window.confirm("Are you sure you want to delete this school?")) {
+      // Optimistic UI update: Remove the school from the state immediately
+      const updatedSchools = schools.filter((school) => school.id !== schoolId);
+      setSchools(updatedSchools);
+      setFilteredSchools(updatedSchools);
+  
+      // Make the API request to delete the school
+      axios
+        .delete(`/api/deleteSchool/${schoolId}`)
+        .then(() => {
+          // Optionally, show a success message or handle further actions
+          alert("School deleted successfully.");
+        })
+        .catch((err) => {
+          // Revert the optimistic UI update in case of failure
+          setSchools(schools);  // revert to previous state
+          setFilteredSchools(schools);  // revert filtered list
+          console.error("Error deleting school:", err);
+          alert("There was an error deleting the school. Please try again.");
+        });
+    }
+  };
+  
+
   if (loading && page === 1) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -102,9 +131,10 @@ export default function ShowSchools() {
           <h1 className="text-white font-extrabold text-xl">School Finder</h1>
           <button
             onClick={() => router.push("/addSchool")}
-            className="bg-white text-blue-600 font-semibold px-4 py-2 rounded-md hover:bg-blue-100 transition"
+            className="flex justify-center items-center gap-1 bg-white text-blue-600 font-semibold px-4 py-2 rounded-md hover:bg-blue-100 transition"
           >
-            Add School <span className="text-xl">{'+'}</span>
+            Add School
+                <FaPlus size={14} />
           </button>
         </div>
       </nav>
@@ -134,13 +164,13 @@ export default function ShowSchools() {
           {filteredSchools.map((school) => (
             <div
               key={school.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition cursor-pointer"
+              className="bg-white relative rounded-lg group shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition duration-300 ease-in-out"
               title={`${school.name} - ${school.city}`}
             >
               <img
                 src={school.image}
                 alt={school.name}
-                className="w-full h-48 object-cover"
+                className="w-full h-48 object-cover transition-transform duration-300 ease-in-out transform group-hover:scale-105"
                 loading="lazy"
               />
               <div className="p-4">
@@ -148,13 +178,21 @@ export default function ShowSchools() {
                 <p className="text-sm text-gray-600 mb-1">{school.address}</p>
                 <p className="text-sm font-medium text-blue-600 ">{school.city}</p>
               </div>
+              <div className="absolute bottom-4 right-2">
+                <button
+                  onClick={() => handleDelete(school.id)}
+                  className="text-gray-600 hover:text-red-600"
+                >
+                  <MdDeleteForever size={25}/>
+                </button>
+              </div>
             </div>
           ))}
         </div>
 
         {/* Loading more spinner */}
         {loadingMore && (
-          <div className="flex justify-center mt-8">
+          <div className="flex justify-center mt-8">    
             <BarLoader width={280} color="#6366f1" />
           </div>
         )}

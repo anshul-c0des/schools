@@ -7,6 +7,7 @@ import * as yup from "yup";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { ClipLoader } from "react-spinners";
+import { IoIosArrowBack } from "react-icons/io";
 
 // Validation Schema
 const schema = yup.object().shape({
@@ -29,8 +30,18 @@ const schema = yup.object().shape({
 
 export default function AddSchool() {
   const [submitMessage, setSubmitMessage] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
 
   const router = useRouter();
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    } else {
+      setImagePreview(null);
+    }
+  };
 
   const {
     register,
@@ -81,10 +92,14 @@ export default function AddSchool() {
         <div className="max-w-3xl mx-auto flex items-center px-6 py-4">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-white font-semibold hover:text-indigo-200 transition"
           >
-            <span className="text-2xl">{'←'}</span> School Finder
+            <div className="bg-white rounded-full text-indigo-500 p-1.5 hover:bg-indigo-200 transition">
+              <IoIosArrowBack />
+            </div> 
           </button>
+          <div className="text-white ml-2 font-semibold">
+            School Finder
+          </div>
         </div>
       </nav>
   
@@ -111,10 +126,16 @@ export default function AddSchool() {
               <input
                 type="file"
                 accept="image/*"
-                id="imageFile"
                 {...register("imageFile")}
-                className="w-full bg-gray-50 border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(e) => {
+                  register("imageFile").onChange(e);
+                  handleImageChange(e);
+                }}
               />
+
+              {imagePreview && (
+                <img src={imagePreview} alt="Preview" className="mt-4 w-20 h-20 object-cover rounded" />
+              )}
               {errors.imageFile && (
                 <p className="text-sm text-red-600 mt-1">{errors.imageFile.message}</p>
               )}
