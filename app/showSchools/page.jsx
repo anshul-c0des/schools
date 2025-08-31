@@ -1,28 +1,28 @@
-'use client';
+"use client"
 
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { BarLoader } from "react-spinners";
+import { BarLoader, ClipLoader } from "react-spinners";
 import { MdDeleteForever } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
 
 const PAGE_SIZE = 10;
 
 export default function ShowSchools() {
-  const [schools, setSchools] = useState([]);
-  const [filteredSchools, setFilteredSchools] = useState([]);
-  const [loading, setLoading] = useState(true);         // loading initial data
-  const [loadingMore, setLoadingMore] = useState(false); // loading next pages
-  const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const [schools, setSchools] = useState([]); // Stores all schools (for infinite scroll)
+  const [filteredSchools, setFilteredSchools] = useState([]); // Stores filtered schools (for search)
+  const [loading, setLoading] = useState(true); // Loading initial data
+  const [loadingMore, setLoadingMore] = useState(false); // Loading next pages
+  const [searchTerm, setSearchTerm] = useState(""); // Search term
+  const [page, setPage] = useState(1); // Current page for pagination
+  const [hasMore, setHasMore] = useState(true); // To track if there's more data to load
 
   const router = useRouter();
 
   // Fetch schools for a specific page
   const fetchSchools = useCallback(async (pageNum) => {
-    if (!hasMore && pageNum !== 1) return;
+    if (!hasMore && pageNum !== 1) return; // Prevent fetching if no more data
 
     if (pageNum === 1) {
       setLoading(true);
@@ -32,18 +32,41 @@ export default function ShowSchools() {
 
     try {
       const res = await axios.get(`/api/getSchools?page=${pageNum}&limit=${PAGE_SIZE}`);
-      const data = res.data.slice().reverse(); // keep the logic of newest first
-      
-      if (pageNum === 1) {
-        setSchools(data);
-        setFilteredSchools(data);
+      const data = res.data.slice().reverse(); // Keep the logic of newest first
+
+      // Ensure no duplicates in the schools list
+      setSchools((prev) => {
+        const allSchools = [...prev, ...data];
+        return allSchools.filter(
+          (school, index, self) =>
+            index === self.findIndex((t) => t.id === school.id) // Ensure unique by school ID
+        );
+      });
+
+      // Apply search filter to the new data and update filteredSchools
+      if (!searchTerm) {
+        setFilteredSchools((prev) => {
+          const allSchools = [...prev, ...data];
+          return allSchools.filter(
+            (school, index, self) =>
+              index === self.findIndex((t) => t.id === school.id) // Ensure unique by school ID
+          );
+        });
       } else {
-        setSchools(prev => [...prev, ...data]);
-        setFilteredSchools(prev => [...prev, ...data]);
+        setFilteredSchools((prev) => [
+          ...prev,
+          ...data.filter((school) =>
+            [school.name, school.city, school.address]
+              .join(" ")
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase())
+          ),
+        ]);
       }
 
+      // If there are fewer results than PAGE_SIZE, set hasMore to false
       if (data.length < PAGE_SIZE) {
-        setHasMore(false);
+        setHasMore(false); // No more data to load
       }
     } catch (err) {
       console.error(err);
@@ -51,17 +74,17 @@ export default function ShowSchools() {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [hasMore]);
+  }, [hasMore, searchTerm]);
 
   // Initial fetch and when page changes
   useEffect(() => {
     fetchSchools(page);
   }, [page, fetchSchools]);
 
-  // Search filter logic on loaded schools only
+  // Search filter logic (on schools list)
   useEffect(() => {
     if (!searchTerm) {
-      setFilteredSchools(schools);
+      setFilteredSchools(schools); // Show all if no search term
     } else {
       const filtered = schools.filter((school) =>
         [school.name, school.city, school.address]
@@ -69,7 +92,7 @@ export default function ShowSchools() {
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
       );
-      setFilteredSchools(filtered);
+      setFilteredSchools(filtered); // Filter based on search term
     }
   }, [searchTerm, schools]);
 
@@ -80,7 +103,7 @@ export default function ShowSchools() {
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
         !loadingMore && hasMore && !loading
       ) {
-        setPage(prev => prev + 1);
+        setPage((prev) => prev + 1); // Increment page to load next
       }
     };
 
@@ -88,32 +111,28 @@ export default function ShowSchools() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loadingMore, hasMore, loading]);
 
-
+  // Handle delete school
   const handleDelete = (schoolId) => {
-    // Show confirmation prompt to the user
     if (window.confirm("Are you sure you want to delete this school?")) {
-      // Optimistic UI update: Remove the school from the state immediately
       const updatedSchools = schools.filter((school) => school.id !== schoolId);
       setSchools(updatedSchools);
-      setFilteredSchools(updatedSchools);
-  
-      // Make the API request to delete the school
+      setFilteredSchools(updatedSchools); // Update the filtered list immediately
+
+      // Make API call to delete the school
       axios
         .delete(`/api/deleteSchool/${schoolId}`)
         .then(() => {
-          // Optionally, show a success message or handle further actions
           alert("School deleted successfully.");
         })
         .catch((err) => {
-          // Revert the optimistic UI update in case of failure
-          setSchools(schools);  // revert to previous state
-          setFilteredSchools(schools);  // revert filtered list
+          // In case of error, revert UI update
+          setSchools(schools);
+          setFilteredSchools(schools);
           console.error("Error deleting school:", err);
           alert("There was an error deleting the school. Please try again.");
         });
     }
   };
-  
 
   if (loading && page === 1) {
     return (
@@ -134,7 +153,7 @@ export default function ShowSchools() {
             className="flex justify-center items-center gap-1 bg-white text-blue-600 font-semibold px-4 py-2 rounded-md hover:bg-blue-100 transition"
           >
             Add School
-                <FaPlus size={14} />
+            <FaPlus size={14} />
           </button>
         </div>
       </nav>
@@ -183,7 +202,7 @@ export default function ShowSchools() {
                   onClick={() => handleDelete(school.id)}
                   className="text-gray-600 hover:text-red-600"
                 >
-                  <MdDeleteForever size={25}/>
+                  <MdDeleteForever size={25} />
                 </button>
               </div>
             </div>
@@ -192,8 +211,8 @@ export default function ShowSchools() {
 
         {/* Loading more spinner */}
         {loadingMore && (
-          <div className="flex justify-center mt-8">    
-            <BarLoader width={280} color="#6366f1" />
+          <div className="flex justify-center mt-8">
+            <ClipLoader color="#6366f1" />
           </div>
         )}
 

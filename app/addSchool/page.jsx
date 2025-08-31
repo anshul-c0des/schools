@@ -142,6 +142,13 @@ export default function AddSchool() {
             </div>
   
             <div className="md:col-span-2">
+              {submitMessage && (
+                <p className={`mt-4 mb-3 text-center text-md font-semibold ${
+                  submitMessage.includes("successfully") ? "text-green-600" : "text-red-600"
+                }`}>
+                  {submitMessage}
+                </p>
+              )}
             <button
               type="submit"
               disabled={isSubmitting}
@@ -156,14 +163,6 @@ export default function AddSchool() {
                 'Add School'
               )}
             </button>
-  
-              {submitMessage && (
-                <p className={`mt-4 text-center text-md font-semibold ${
-                  submitMessage.includes("successfully") ? "text-green-600" : "text-red-600"
-                }`}>
-                  {submitMessage}
-                </p>
-              )}
             </div>
           </form>
         </div>
