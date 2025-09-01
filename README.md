@@ -1,36 +1,118 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🏫 School Finder
 
-## Getting Started
+A responsive web application built with **Next.js**, **Tailwind CSS**, and **MySQL**, designed to manage and display school listings. Developed as part of an internship assignment, the project allows users to **add schools** via a form and **view them** in a searchable, card-style layout.
 
-First, run the development server:
+> 💡 This project fulfills all the requirements of the internship task including form validation, file upload, MySQL integration, responsiveness, and modern UI design.
+
+---
+
+## 🚀 Tech Stack
+
+- **Frontend:** Next.js 13+, Tailwind CSS
+- **Form Handling:** React Hook Form, Yup
+- **Backend/API:** Next.js API Routes, Axios
+- **Database:** MySQL
+- **File Upload:** Cloudinary
+- **Icons & UI:** React Icons, React Spinners, React Toastify
+
+---
+
+## 📁 Pages Overview
+
+### 1. `/addSchool` – Add a New School  
+- Form with validation using `react-hook-form` and `yup`  
+- Inputs: name, address, city, state, contact number, email, image  
+- Validates required fields, image size, email format, etc.  
+- Dark mode support  
+- Responsive layout (mobile & desktop)
+
+### 2. `/` – Show Schools  
+- Displays list of schools in a card layout  
+- Search by name, address, or city  
+- Lazy loading / infinite scroll  
+- Delete functionality with confirmation  
+- Responsive UI inspired by product listing pages  
+- Dark mode supported
+
+---
+
+## 🛠️ Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- MySQL Server
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/anshul-c0des/schools.git
+cd schools
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install dependencies**
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Setup your MySQL database**
+- Create a schools table with the following fields:
+```bash
+  CREATE TABLE schools (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name TEXT,
+  address TEXT,
+  city TEXT,
+  state TEXT,
+  contact BIGINT,
+  email_id TEXT,
+  image TEXT
+  );
+```
 
-## Learn More
+4. **Configure environment variables**
 
-To learn more about Next.js, take a look at the following resources:
+Create a .env.local file in the root directory:
+```bash
+DB_HOST=localhost
+DB_USER=your_mysql_user
+DB_PASSWORD=your_mysql_password
+DB_NAME=your_db_name
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5. **Run the development server**
+```bash
+npm run dev
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ✅ Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 🔒 Validated school data form
+
+- 📷 Image preview before upload
+
+- 🌒 Light/Dark theme toggle
+
+- 🔍 Search functionality (live filtering)
+
+- 📄 Paginated + infinite scroll display
+
+- ❌ Delete school (with confirmation)
+
+- ⚡ Smooth transitions and responsive design
+
+---
+
+## 🌐 Live Demo
+
+🔗 **[View Deployed Project on Vercel](https://your-vercel-deployment-url.com)**  
