@@ -113,4 +113,4 @@ npm run dev
 
 ## 🌐 Live Demo
 
-🔗 **[View Deployed Project on Vercel]([https://schools-theta-mocha.vercel.app/])**  
+🔗 **[View Deployed Project on Vercel](https://schools-theta-mocha.vercel.app/)**  
