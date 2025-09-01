@@ -8,6 +8,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { ClipLoader } from "react-spinners";
 import { IoIosArrowBack } from "react-icons/io";
+import { toast, ToastContainer } from "react-toastify";
 
 // Validation Schema
 const schema = yup.object().shape({
@@ -76,12 +77,14 @@ export default function AddSchool() {
 
       await axios.post("/api/addSchool", payload);
       setSubmitMessage("School added successfully!");
+      toast.success("School added succesfully!");
       setTimeout(() => {
         router.push('/');
       }, 1000);
     } catch (error) {
       console.error(error);
       setSubmitMessage("Error submitting form.");
+      toast.error("Error submitting form.");
     }
   };
 
@@ -207,6 +210,7 @@ function FormTextarea({ label, id, register, error }) {
         } bg-gray-50 text-gray-800`}
       />
       {error && <p className="text-sm text-red-600 mt-1">{error.message}</p>}
+      <ToastContainer />
     </div>
   );
 }

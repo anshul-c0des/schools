@@ -5,7 +5,9 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { BarLoader, ClipLoader } from "react-spinners";
 import { MdDeleteForever } from "react-icons/md";
+import { IoSearchSharp } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const PAGE_SIZE = 10;
 
@@ -74,7 +76,7 @@ export default function ShowSchools() {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [hasMore, searchTerm]);
+  }, [hasMore]);
 
   // Initial fetch and when page changes
   useEffect(() => {
@@ -122,14 +124,14 @@ export default function ShowSchools() {
       axios
         .delete(`/api/deleteSchool/${schoolId}`)
         .then(() => {
-          alert("School deleted successfully.");
+            toast.success("School deleted successfully!"); 
         })
         .catch((err) => {
           // In case of error, revert UI update
           setSchools(schools);
           setFilteredSchools(schools);
           console.error("Error deleting school:", err);
-          alert("There was an error deleting the school. Please try again.");
+          toast.error("There was an error deleting the school. Please try again.");
         });
     }
   };
@@ -163,15 +165,21 @@ export default function ShowSchools() {
         <h2 className="text-3xl font-bold mb-6 text-center">Find Your School</h2>
 
         {/* Search Input */}
-        <div className="mb-8">
-          <input
+        <div className="w-full sm:w-3/4 lg:w-1/2 mx-auto flex items-center justify-center">
+        <div className="relative mb-8 flex w-full">    
+        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <IoSearchSharp />
+        </div>
+        <input
             type="text"
             placeholder="Search by name, city or address..."
-            className="w-full max-w-md mx-auto block px-4 py-3 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-3 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        />
         </div>
+        </div>
+
 
         {/* No results message */}
         {!loading && filteredSchools.length === 0 && (
@@ -200,7 +208,7 @@ export default function ShowSchools() {
               <div className="absolute bottom-4 right-2">
                 <button
                   onClick={() => handleDelete(school.id)}
-                  className="text-gray-600 hover:text-red-600"
+                  className="text-gray-600 hover:text-red-600 transition transform hover:scale-150"
                 >
                   <MdDeleteForever size={25} />
                 </button>
@@ -208,7 +216,6 @@ export default function ShowSchools() {
             </div>
           ))}
         </div>
-
         {/* Loading more spinner */}
         {loadingMore && (
           <div className="flex justify-center mt-8">
@@ -217,9 +224,10 @@ export default function ShowSchools() {
         )}
 
         {/* End message */}
-        {!hasMore && !loadingMore && (
+        {!hasMore && !loadingMore && filteredSchools.length !== 0 && (
           <p className="text-center text-gray-600 mt-8">You've reached the end.</p>
         )}
+
       </main>
     </div>
   );
