@@ -138,20 +138,20 @@ export default function ShowSchools() {
 
   if (loading && page === 1) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-800">
         <BarLoader width={280} color="#6366f1" /> {/* Indigo-500 */}
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="min-h-screen bg-gray-50 text-gray-800 dark:bg-slate-800">
       {/* Navbar */}
       <Navbar showAddSchoolButton={true} showBackButton={false} />
 
       {/* Main Content */}
       <main className="max-w-5xl mx-auto px-4 py-8">
-        <h2 className="text-3xl font-bold mb-6 text-center">Find Your School</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-indigo-600 dark:text-blue-600">Find Your School</h2>
 
         {/* Search Input */}
         <div className="w-full sm:w-3/4 lg:w-1/2 mx-auto flex items-center justify-center">
@@ -162,7 +162,7 @@ export default function ShowSchools() {
         <input
             type="text"
             placeholder="Search by name, city or address..."
-            className="w-full pl-10 pr-4 py-3 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-3 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:text-white"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -180,7 +180,7 @@ export default function ShowSchools() {
           {filteredSchools.map((school) => (
             <div
               key={school.id}
-              className="bg-white relative rounded-lg group shadow-md overflow-hidden cursor-pointer transition duration-300 ease-in-out transform hover:scale-[1.01] hover:shadow-lg animate-fadeIn delay-50"
+              className="bg-white dark:bg-slate-900 relative rounded-lg group shadow-md overflow-hidden cursor-pointer transition duration-300 ease-in-out transform hover:scale-[1.01] hover:shadow-lg animate-fadeIn delay-50"
               title={`${school.name} - ${school.city}`}
             >
               <img
@@ -190,14 +190,14 @@ export default function ShowSchools() {
                 loading="lazy"
               />
               <div className="p-4">
-                <h3 className="font-semibold text-base sm:text-lg mb-1 truncate">{school.name}</h3>
-                <p className="text-xs sm:text-sm text-gray-600 mb-1 truncate">{school.address}</p>
-                <p className="text-xs sm:text-sm font-medium text-blue-600 truncate">{school.city}</p>
+                <h3 className="font-semibold text-base sm:text-lg mb-1 truncate dark:text-gray-300">{school.name}</h3>
+                <p className="text-xs sm:text-sm text-gray-600 mb-1 truncate dark:text-gray-400">{school.address}</p>
+                <p className="text-xs sm:text-sm font-medium text-blue-600 truncate dark:text-blue-400">{school.city}</p>
               </div>
               <div className="absolute bottom-4 right-2">
                 <button
                   onClick={() => handleDelete(school.id)}
-                  className="text-gray-600 hover:text-red-600 transition transform hover:scale-150"
+                  className="text-gray-600 hover:text-red-600 hover:dark:text-red-600 transition transform hover:scale-150 dark:text-gray-400"
                 >
                   <MdDeleteForever size={25} />
                 </button>
@@ -214,7 +214,7 @@ export default function ShowSchools() {
 
         {/* End message */}
         {!hasMore && !loadingMore && filteredSchools.length !== 0 && (
-          <p className="text-center text-gray-600 mt-8">You've reached the end.</p>
+          <p className="text-center text-gray-600 mt-8 dark:text-gray-400">You've reached the end.</p>
         )}
 
       </main>
