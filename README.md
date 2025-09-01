@@ -1,6 +1,6 @@
 # 🏫 School Finder
 
-A responsive web application built with **Next.js**, **Tailwind CSS**, and **MySQL**, designed to manage and display school listings. Developed as part of an internship assignment, the project allows users to **add schools** via a form and **view them** in a searchable, card-style layout.
+A responsive web application built with **Next.js**, **Tailwind CSS**, and **MySQL**, designed to manage and display school listings. The project allows users to **add schools** via a form and **view them** in a searchable, card-style layout.
 
 ---
 
@@ -24,7 +24,7 @@ A responsive web application built with **Next.js**, **Tailwind CSS**, and **MyS
 - Dark mode support  
 - Responsive layout (mobile & desktop)
 
-### 2. `/` – Show Schools  
+### 2. `/showSchools` - Show list of Schools 
 - Displays list of schools in a card layout  
 - Search by name, address, or city  
 - Lazy loading / infinite scroll  
@@ -74,7 +74,7 @@ npm install
 
 4. **Configure environment variables**
 
-Create a .env.local file in the root directory:
+- Create a .env.local file in the root directory:
 ```bash
 DB_HOST=localhost
 DB_USER=your_mysql_user
