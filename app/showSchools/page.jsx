@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { BarLoader, ClipLoader } from "react-spinners";
 import { MdDeleteForever } from "react-icons/md";
 import { IoSearchSharp } from "react-icons/io5";
-import { FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
+import Navbar from "@/components/Navbar";
 
 const PAGE_SIZE = 10;
 
@@ -147,18 +147,7 @@ export default function ShowSchools() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* Navbar */}
-      <nav className="bg-blue-600 shadow-md">
-        <div className="max-w-5xl mx-auto flex justify-between items-center p-4">
-          <h1 className="text-white font-extrabold text-xl">School Finder</h1>
-          <button
-            onClick={() => router.push("/addSchool")}
-            className="flex justify-center items-center gap-1 bg-white text-blue-600 font-semibold px-4 py-2 rounded-md hover:bg-blue-100 transition"
-          >
-            Add School
-            <FaPlus size={14} />
-          </button>
-        </div>
-      </nav>
+      <Navbar showAddSchoolButton={true} showBackButton={false} />
 
       {/* Main Content */}
       <main className="max-w-5xl mx-auto px-4 py-8">
@@ -191,7 +180,7 @@ export default function ShowSchools() {
           {filteredSchools.map((school) => (
             <div
               key={school.id}
-              className="bg-white relative rounded-lg group shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition duration-300 ease-in-out"
+              className="bg-white relative rounded-lg group shadow-md overflow-hidden cursor-pointer transition duration-300 ease-in-out transform hover:scale-[1.01] hover:shadow-lg animate-fadeIn delay-50"
               title={`${school.name} - ${school.city}`}
             >
               <img
@@ -201,9 +190,9 @@ export default function ShowSchools() {
                 loading="lazy"
               />
               <div className="p-4">
-                <h3 className="font-semibold text-lg mb-1">{school.name}</h3>
-                <p className="text-sm text-gray-600 mb-1">{school.address}</p>
-                <p className="text-sm font-medium text-blue-600 ">{school.city}</p>
+                <h3 className="font-semibold text-base sm:text-lg mb-1 truncate">{school.name}</h3>
+                <p className="text-xs sm:text-sm text-gray-600 mb-1 truncate">{school.address}</p>
+                <p className="text-xs sm:text-sm font-medium text-blue-600 truncate">{school.city}</p>
               </div>
               <div className="absolute bottom-4 right-2">
                 <button

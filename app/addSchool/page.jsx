@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { ClipLoader } from "react-spinners";
 import { IoIosArrowBack } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
+import Navbar from "@/components/Navbar";
 
 // Validation Schema
 const schema = yup.object().shape({
@@ -91,20 +92,7 @@ export default function AddSchool() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Navbar */}
-      <nav className="bg-indigo-600 shadow-md">
-        <div className="max-w-3xl mx-auto flex items-center px-6 py-4">
-          <button
-            onClick={() => router.back()}
-          >
-            <div className="bg-white rounded-full text-indigo-500 p-1.5 hover:bg-indigo-200 transition">
-              <IoIosArrowBack />
-            </div> 
-          </button>
-          <div className="text-white ml-2 font-semibold">
-            School Finder
-          </div>
-        </div>
-      </nav>
+      <Navbar showAddSchoolButton={false} showBackButton={true} />
   
       {/* Form Container */}
       <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
