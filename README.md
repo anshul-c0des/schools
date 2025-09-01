@@ -2,8 +2,6 @@
 
 A responsive web application built with **Next.js**, **Tailwind CSS**, and **MySQL**, designed to manage and display school listings. Developed as part of an internship assignment, the project allows users to **add schools** via a form and **view them** in a searchable, card-style layout.
 
-> 💡 This project fulfills all the requirements of the internship task including form validation, file upload, MySQL integration, responsiveness, and modern UI design.
-
 ---
 
 ## 🚀 Tech Stack
